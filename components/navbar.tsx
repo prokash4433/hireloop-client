@@ -93,7 +93,7 @@ function GetStartedButton({ className }: { className?: string }) {
 
 export function Navbar() {
   return (
-    <header className="px-4 pt-6 sm:px-6">
+    <header className="relative z-20 px-4 pt-6 sm:px-6">
       <div className="mx-auto max-w-[1320px]">
         {/* Desktop — exact Figma layout: 1320x74 bar, logo left, links + divider + CTAs right */}
         <nav className="hidden h-[74px] items-center justify-between rounded-[16px] bg-hire-navbar pr-2 pl-6 lg:flex">
