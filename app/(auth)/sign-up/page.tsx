@@ -1,38 +1,43 @@
-
 "use client"
 
 import { useState, type FormEvent } from "react"
-import { Eye, EyeOff, ArrowRight, Handshake } from "lucide-react"
+import { Eye, EyeOff, ArrowRight, Handshake, Users, User, Shield } from "lucide-react"
 import Link from "next/link"
 import { authClient } from "@/lib/auth-client"
 import { redirect } from "next/navigation"
+
+const ROLES = [
+  { value: "seeker", label: "Job Seeker", icon: Users },
+  { value: "recruiter", label: "Recruiter", icon: User },
+  { value: "admin", label: "Admin", icon: Shield },
+] as const
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState("")
 
-  const handleSignUp = async (e:React.SubmitEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(e.currentTarget)
-    const user = Object.fromEntries(formData.entries()) as { name: string, email: string, password: string, confirmPassword:string}
-    
-    
+    const user = Object.fromEntries(formData.entries()) as { name: string, email: string, password: string, confirmPassword: string, role: "seeker" | "recruiter" | "admin" }
+
+
     if (user.password !== user.confirmPassword) {
       setError("Passwords do not match!")
       return
     }
 
-     const {data, error}= await authClient.signUp.email({
+    const { data, error } = await authClient.signUp.email({
       ...user,
-     })
-     if(data) {
+    })
+    if (data) {
       redirect('/')
-     }
-     if(error){
+    }
+    if (error) {
       console.log(error)
-     }
+    }
 
     // const { data: signUpResponse, error: signUpError } =
     //   await authClient.signUp.email({
@@ -41,13 +46,13 @@ const SignUpPage = () => {
     //     password: data.password,
     //     callbackURL: "/",
     //   })
-      
+
     // console.log('signUp response', signUpResponse, "signUpError:", signUpError)
     // if (signUpError) {
     //   setError(signUpError.message ?? "Something went wrong")
     //   return
     // }
-   
+
   }
 
   const inputClass =
@@ -106,6 +111,33 @@ const SignUpPage = () => {
 
         {/* Sign Up Form */}
         <form onSubmit={handleSignUp} className="relative z-10 space-y-5">
+
+          {/* Role Selector */}
+          <fieldset>
+            <legend className="mb-2 block text-sm font-medium text-[#B5B3F5]/85">
+              Joining HireLoop as
+            </legend>
+
+            <div className="grid grid-cols-3 gap-3">
+              {ROLES.map(({ value, label, icon: Icon }, index) => (
+                <label key={value} className="relative cursor-pointer">
+                  <input
+                    type="radio"
+                    name="role"
+                    value={value}
+                    defaultChecked={index === 0}
+                    required
+                    className="peer sr-only"
+                  />
+
+                  <div className="flex h-20 flex-col items-center justify-center gap-2 rounded-xl border border-[#5146D8]/25 bg-[#03030B]/70 text-[#B5B3F5]/55 transition-all duration-300 hover:scale-[1.05] hover:border-[#7773E8]/70 hover:bg-[#0B0925] hover:text-white hover:shadow-[0_0_20px_rgba(81,70,216,0.25)] active:scale-[0.97] peer-checked:border-[#7773E8] peer-checked:bg-[#5146D8]/15 peer-checked:text-white peer-checked:shadow-[0_0_25px_rgba(81,70,216,0.35)] peer-focus-visible:ring-2 peer-focus-visible:ring-[#7773E8]/50">
+                    <Icon size={18} />
+                    <span className="text-xs font-medium">{label}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           {/* Full Name */}
           <div>
