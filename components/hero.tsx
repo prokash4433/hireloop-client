@@ -1,4 +1,4 @@
-// components/sections/hero.tsx
+ 
 import Image from "next/image"
 import { MapPinIcon, SearchIcon, type LucideIcon } from "lucide-react"
 
@@ -187,7 +187,7 @@ export function Hero() {
       {/* Content overlay */}
       <div className="absolute inset-x-0 top-0">
         <div className="mx-auto flex w-[784px] max-w-full flex-col items-center gap-12 px-4 pt-24 lg:px-0 lg:pt-[176px]">
-          <div className="flex flex-col items-center gap-8">
+          <div className="flex mt-60 flex-col items-center gap-8">
             <BadgeRow />
             <HeroTitle />
           </div>

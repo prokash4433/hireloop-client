@@ -1,7 +1,11 @@
+
 "use client"
 
 import * as React from "react"
-import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes"
+import {
+  ThemeProvider as NextThemesProvider,
+  useTheme,
+} from "next-themes"
 
 function ThemeProvider({
   children,
@@ -39,19 +43,23 @@ function ThemeHotkey() {
 
   React.useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.defaultPrevented || event.repeat) {
+      // Ignore invalid or repeated keyboard events
+      if (!event || !event.key || event.defaultPrevented || event.repeat) {
         return
       }
 
+      // Ignore modifier keys
       if (event.metaKey || event.ctrlKey || event.altKey) {
         return
       }
 
-      if (event.key.toLowerCase() !== "d") {
+      // Ignore typing inside input fields
+      if (isTypingTarget(event.target)) {
         return
       }
 
-      if (isTypingTarget(event.target)) {
+      // Toggle theme using D key
+      if (event.key.toLowerCase() !== "d") {
         return
       }
 
