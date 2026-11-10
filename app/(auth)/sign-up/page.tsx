@@ -5,6 +5,7 @@ import { Eye, EyeOff, ArrowRight, Handshake, Users, User, Shield } from "lucide-
 import Link from "next/link"
 import { authClient } from "@/lib/auth-client"
 import { redirect } from "next/navigation"
+import {useRouter} from 'next/navigation'
 
 const ROLES = [
   { value: "seeker", label: "Job Seeker", icon: Users },
@@ -13,6 +14,7 @@ const ROLES = [
 ] as const
 
 const SignUpPage = () => {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState("")
@@ -37,6 +39,10 @@ const SignUpPage = () => {
     }
     if (error) {
       console.log(error)
+    }
+    if(!error) {
+      router.refresh();
+      router.push('/')
     }
 
     // const { data: signUpResponse, error: signUpError } =
