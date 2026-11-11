@@ -1,3 +1,4 @@
+
 "use client"
 
 import {
@@ -10,7 +11,9 @@ import {
           SidebarMenuButton,
           SidebarMenuItem,
 } from "@/components/ui/sidebar"
+
 import { signOut, useSession } from "@/lib/auth-client"
+
 import {
           Bookmark,
           Briefcase,
@@ -25,6 +28,8 @@ import {
           type LucideIcon,
 } from "lucide-react"
 
+import Link from "next/link"
+
 export type Role = "seeker" | "recruiter" | "admin"
 
 export interface MenuItem {
@@ -34,12 +39,11 @@ export interface MenuItem {
           icon: LucideIcon
 }
 
-// Nav items extracted from the Figma sidebar spec ("HL 2.0/Sidebar" role variants)
 const menuItemsByRole: Record<Role, MenuItem[]> = {
           seeker: [
                     { id: "dashboard", name: "Dashboard", url: "/dashboard/seeker", icon: LayoutDashboard },
                     { id: "jobs", name: "Jobs", url: "/dashboard/seeker/jobs", icon: Briefcase },
-                    { id: "saved", name: "Saved Jobs", url: "/dashboard/seeker/saved", icon: Bookmark },
+                    { id: "saved-jobs", name: "Saved Jobs", url: "/dashboard/seeker/saved", icon: Bookmark },
                     { id: "applications", name: "Applications", url: "/dashboard/seeker/applications", icon: FileText },
                     { id: "billing", name: "Billing", url: "/dashboard/seeker/billing", icon: Wallet },
                     { id: "settings", name: "Settings", url: "/dashboard/seeker/settings", icon: Settings },
@@ -49,6 +53,7 @@ const menuItemsByRole: Record<Role, MenuItem[]> = {
                     { id: "dashboard", name: "Dashboard", url: "/dashboard/recruiter", icon: LayoutDashboard },
                     { id: "company", name: "My Company", url: "/dashboard/recruiter/company", icon: Building2 },
                     { id: "manage-jobs", name: "Manage Jobs", url: "/dashboard/recruiter/jobs", icon: Briefcase },
+                    { id: "job", name: " Add job", url: "/dashboard/recruiter/jobs/new", icon: PlusCircle},
                     { id: "applications", name: "Applications", url: "/dashboard/recruiter/applications", icon: FileText },
                     { id: "settings", name: "Settings", url: "/dashboard/recruiter/settings", icon: Settings },
           ],
@@ -65,23 +70,33 @@ const menuItemsByRole: Record<Role, MenuItem[]> = {
 
 export function DashboardSidebar() {
           const { data: session, isPending } = useSession()
-          const role = session?.user?.role || "seeker"
+
+          const userRole = session?.user?.role
+
+          const role: Role =
+                    userRole === "admin" ||
+                              userRole === "recruiter" ||
+                              userRole === "seeker"
+                              ? userRole
+                              : "seeker"
 
           const handleLogout = async () => {
                     await signOut()
                     window.location.href = "/"
           }
 
+          if (isPending) return null
+
           return (
                     <Sidebar>
                               <SidebarHeader />
+
                               <SidebarContent>
-                                        <SidebarGroup />
                                         <SidebarGroup>
                                                   <SidebarMenu>
-                                                            {menuItemsByRole[role as Role].map((item) => (
+                                                            {menuItemsByRole[role].map((item) => (
                                                                       <SidebarMenuItem key={item.id}>
-                                                                                <SidebarMenuButton render={<a href={item.url} />}>
+                                                                                <SidebarMenuButton render={<Link href={item.url} />}>
                                                                                           <item.icon />
                                                                                           <span>{item.name}</span>
                                                                                 </SidebarMenuButton>
@@ -89,8 +104,8 @@ export function DashboardSidebar() {
                                                             ))}
                                                   </SidebarMenu>
                                         </SidebarGroup>
-                                        <SidebarGroup />
                               </SidebarContent>
+
                               <SidebarFooter>
                                         <SidebarMenu>
                                                   <SidebarMenuItem>

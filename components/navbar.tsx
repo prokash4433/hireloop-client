@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from "next/image"
@@ -15,12 +14,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useSession, signOut } from "@/lib/auth-client"
-
-const navLinks = [
-  { label: "Browse Jobs", href: "/" },
-  { label: "Company", href: "/company" },
-  { label: "Pricing", href: "/pricing" },
-]
 
 function Logo() {
   return (
@@ -45,10 +38,16 @@ function Divider({ className }: { className?: string }) {
   )
 }
 
-function NavLinks({ className }: { className?: string }) {
+function NavLinks({
+  links,
+  className,
+}: {
+  links: { label: string; href: string }[]
+  className?: string
+}) {
   return (
     <ul className={className}>
-      {navLinks.map((link) => (
+      {links.map((link) => (
         <li key={link.label}>
           <Link
             href={link.href}
@@ -93,6 +92,13 @@ function GetStartedButton({ className }: { className?: string }) {
 export function Navbar() {
   const { data: session } = useSession()
 
+  const navLinks = [
+    { label: "Browse Jobs", href: "/" },
+    { label: "Company", href: "/company" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Dashboard", href: `/dashboard/${session?.user?.role || "seeker"}` },
+  ]
+
   const handleSignOut = async () => {
     await signOut()
   }
@@ -106,7 +112,7 @@ export function Navbar() {
           <Logo />
 
           <div className="flex h-full items-center gap-6">
-            <NavLinks className="flex items-center gap-10" />
+            <NavLinks links={navLinks} className="flex items-center gap-10" />
 
             <Divider />
 
@@ -181,7 +187,10 @@ export function Navbar() {
                   <span className="sr-only">Close</span>
                 </SheetClose>
 
-                <NavLinks className="mt-10 flex flex-col gap-1 [&_a]:flex [&_a]:py-2 [&_a]:text-lg" />
+                <NavLinks
+                  links={navLinks}
+                  className="mt-10 flex flex-col gap-1 [&_a]:flex [&_a]:py-2 [&_a]:text-lg"
+                />
 
                 <Divider className="my-4 w-full" />
 
