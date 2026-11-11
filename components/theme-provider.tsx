@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -6,6 +5,36 @@ import {
   ThemeProvider as NextThemesProvider,
   useTheme,
 } from "next-themes"
+
+/**
+ * next-themes + React 19 warning filter.
+ * next-themes ekta inline <script> render kore (theme flash thamate),
+ * ar React 19 seta dekhle dev mode e warning dey. Eta harmless.
+ * Sudhu ei ek-i message ta filter kora hocche, baki shob error ager moto ashbe.
+ */
+const SCRIPT_TAG_WARNING =
+  "Encountered a script tag while rendering React component"
+
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+  const w = window as typeof window & { __scriptWarnPatched?: boolean }
+
+  if (!w.__scriptWarnPatched) {
+    w.__scriptWarnPatched = true
+
+    const originalError = console.error
+
+    console.error = (...args: unknown[]) => {
+      if (
+        typeof args[0] === "string" &&
+        args[0].includes(SCRIPT_TAG_WARNING)
+      ) {
+        return
+      }
+
+      originalError.apply(console, args)
+    }
+  }
+}
 
 function ThemeProvider({
   children,

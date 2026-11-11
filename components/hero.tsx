@@ -118,20 +118,20 @@ function SearchBar() {
     <form
       role="search"
       className="
-        flex w-full flex-col gap-3 rounded-2xl border border-white/20 bg-[#101010] p-4
+        flex w-full flex-col gap-3 rounded-[16px] border border-white/20 bg-[#101010] p-4
         lg:h-16 lg:flex-row lg:items-center lg:gap-6 lg:py-2 lg:pr-2 lg:pl-6
       "
     >
       <SearchField icon={SearchIcon} name="q" placeholder="Job title, skill or company" />
 
-      <span aria-hidden="true" className="hidden h-6 w-px shrink-0 bg-white/20 lg:block" />
+      <span aria-hidden="true" className="hidden h-[23px] w-px shrink-0 bg-white/20 lg:block" />
 
       <SearchField icon={MapPinIcon} name="location" placeholder="Location or Remote" />
 
       <Button
         type="submit"
         aria-label="Search jobs"
-        className="size-12 shrink-0 self-end rounded-xl bg-hire-cta hover:bg-hire-cta/90 lg:self-auto"
+        className="size-12 shrink-0 self-end rounded-[12px] bg-hire-cta hover:bg-hire-cta/90 lg:self-auto"
       >
         <SearchIcon className="size-6" />
       </Button>
@@ -177,7 +177,7 @@ export function Hero() {
           src="/images/globe.png"
           alt=""
           width={1440}
-          height={1600}
+          height={1882}
           sizes="100vw"
           priority
           className="h-auto w-full min-w-[950px] max-w-none shrink-0 select-none"
@@ -187,7 +187,7 @@ export function Hero() {
       {/* Content overlay */}
       <div className="absolute inset-x-0 top-0">
         <div className="mx-auto flex w-[784px] max-w-full flex-col items-center gap-12 px-4 pt-24 lg:px-0 lg:pt-[176px]">
-          <div className="flex mt-60 flex-col items-center gap-8">
+          <div className="flex mt-60 flex-col items-center gap-8 lg:mt-0">
             <BadgeRow />
             <HeroTitle />
           </div>
