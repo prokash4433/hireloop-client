@@ -4,8 +4,24 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Check, ChevronDown, Rocket } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { createJob } from "@/lib/actions/jobs";
 
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
+
+export type JobInput = {
+  title: string;
+  company: string;
+  category: string;
+  jobType: string;
+  isRemote: boolean;
+  location: string;
+  deadline: string;
+  minSalary: string;
+  maxSalary: string;
+  frequency: string;
+  responsibilities: string;
+  requirements: string;
+};
 const CATEGORIES = [
   "Engineering & Tech",
   "Design",
@@ -149,13 +165,21 @@ function PostNewJobPage() {
   const [form, setForm] = useState(initialForm);
 
   const setField = (key: keyof typeof form, value: string | boolean) =>
-    setForm((f) => ({ ...f, [key]: value }));
+    setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: send `form` to the jobs API, e.g.
-    // await fetch("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-    console.log(form);
+
+    console.log(form)
+
+    try {
+      const result = await createJob(form);
+      console.log('createJob result', result);
+      // TODO: show a success toast and redirect to Manage Jobs
+    } catch (error) {
+      console.error('createJob failed:', error);
+      // TODO: show an error toast with the message
+    }
   };
 
   return (
